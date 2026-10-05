@@ -1,0 +1,27 @@
+site_name: book-translate
+
+theme:
+  name: material
+  language: ru
+
+nav:
+  - Обзор: index.md
+  - Как переводить: guide.md
+  - Инструкция переводчику: translation-instruction.md
+  - API: api.md
+
+markdown_extensions:
+  - toc:
+      toc_depth: 3
+  - admonition
+
+plugins:
+  - search
+  - mkdocstrings:
+      handlers:
+        python:
+          paths:
+            - .
+          options:
+            show_source: false
+            docstring_style: google

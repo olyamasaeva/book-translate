@@ -1,0 +1,55 @@
+# Settings for one book. Copy to data/<book>/book.yaml and edit.
+# Relative paths are resolved from the directory of this file.
+# The config is trusted: it names programs to run (chrome, tesseract) and where PDFs are written.
+
+slug: example
+workdir: .
+output:
+  bilingual: example-bilingual.pdf
+  inplace: example-inplace.pdf
+
+page_width_mm: 148
+# page_height_mm: 210        # default: from the median aspect ratio of the scans
+spreads: auto                 # auto | always | never
+
+# Language of the book (required)
+ocr_lang: eng                 # Tesseract code of the original
+source_lower: "a-z"           # alphabet of the original, as a regex character set
+source_upper: "A-Z"
+target_letters: "а-яёА-ЯЁ"    # alphabet of the translation
+target_lang: ru               # lang attribute of the generated documents
+notes_headings: [Примечания]  # heading of the footnotes block in the translation
+
+quote_open: "\"«“'"
+quote_close: "\"»”"
+attribution_source: [Riddle, Proverb, Song]
+attribution_target: [Загадка, Пословица, Песня]
+
+source_names:
+  Smith: Смит
+
+service_words: [cm, mm, fig]
+credit_words: [Photo]
+
+retypeset_kinds: [toc]
+retypeset_ranges: []
+
+# Text in the generated PDFs (defaults are English)
+labels:
+  page: "с."
+  missing: Перевод этой страницы не готов.
+  note: Примечание переводчика.
+
+# Regexes removed from the translation before layout, e.g. translator's markers like "[summary]"
+editorial_patterns: []
+# Sentences of translator's notes containing these fragments are left out of the bilingual PDF
+note_boilerplate: []
+
+title:
+  heading: Author (ed.)<br>«Book title»
+  subtitle: What the book is about
+  about:
+    - Working translation for personal use. Left — the page scan, right — the translation.
+
+tesseract: system             # system | path to the binary | path to an unpacked package directory
+# chrome: /usr/bin/chromium   # default: the first of google-chrome, chromium, … found
