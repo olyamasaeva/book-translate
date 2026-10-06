@@ -39,6 +39,7 @@ class Book:
     workdir: Path
     out_bilingual: Path
     out_inplace: Path
+    out_reader: Path
     ocr_lang: str
     source_lower: str
     source_upper: str
@@ -57,6 +58,7 @@ class Book:
     credit_words: tuple = ()
     retypeset_kinds: tuple = ("toc",)
     retypeset_ranges: tuple = ()
+    retypeset_verse_paragraphs: int = 0
     editorial_patterns: tuple = ()
     note_boilerplate: tuple = ()
     labels: dict = field(default_factory=dict)
@@ -139,6 +141,9 @@ def validate(raw: dict, name: str) -> None:
         value = raw.get(key)
         if value is not None and (not isinstance(value, (int, float)) or value <= 0):
             raise ValueError(f"{name}: поле {key} должно быть положительным числом")
+    verse = raw.get("retypeset_verse_paragraphs", 0)
+    if isinstance(verse, bool) or not isinstance(verse, int) or verse < 0:
+        raise ValueError(f"{name}: поле retypeset_verse_paragraphs должно быть целым ≥ 0")
     for key in ALPHABETS:
         try:
             re.compile("[" + str(raw[key]) + "]")
@@ -176,6 +181,7 @@ def load(path: str | Path) -> Book:
     raw["slug"] = slug
     raw["out_bilingual"] = resolve(output.get("bilingual", f"{slug}-bilingual.pdf"))
     raw["out_inplace"] = resolve(output.get("inplace", f"{slug}-inplace.pdf"))
+    raw["out_reader"] = resolve(output.get("reader", f"{slug}-reader.html"))
     unknown = set(raw) - set(Book.__dataclass_fields__)
     if unknown:
         raise ValueError(f"неизвестные поля в {path.name}: {', '.join(sorted(unknown))}")

@@ -1,10 +1,13 @@
 # book-translate
 
-Translate a scanned book that has no text layer into two PDFs:
+Translate a scanned book that has no text layer into two PDFs and an offline reader:
 
 - **bilingual**: the page scan on the left, the translation on the right;
 - **in-place**: the original text on each page is replaced with the translation in the
-  same layout. Photos, drawings, sewing-pattern lines and other text stay uncovered.
+  same layout. Photos, drawings, sewing-pattern lines and other text stay uncovered;
+- **reader**: one offline HTML file with the original and the translation side by side.
+  Hovering a line or sentence highlights its counterpart, and words the translator was
+  unsure about carry a tooltip with the guess and, once checked, the dictionary verdict.
 
 The pipeline handles the hard parts of illustrated non-fiction scans: colour photos,
 patterns drawn on a grid, captions set at an angle, footnotes, and multi-stanza quotes
@@ -58,6 +61,7 @@ uv run book-translate bilingual --book data/<book>/book.yaml [--force]
 nice -n 19 uv run book-translate layout --book data/<book>/book.yaml --jobs 2
 uv run book-translate inplace   --book data/<book>/book.yaml [--pages p-023a,p-041b --out sub.pdf] [--force]
 uv run book-translate check     --book data/<book>/book.yaml
+uv run book-translate reader    --book data/<book>/book.yaml [--force]   # offline HTML: original and translation side by side, hover highlights pairs
 uv run book-translate compress  finished.pdf          # downsample scans to 150 dpi → finished-compressed.pdf
 ```
 
@@ -141,7 +145,7 @@ config from someone else before running it.
 
 | What | Where |
 |---|---|
-| Code | `book_translate/`: `pages`, `layout`, `bilingual`, `inplace`, `check`, `compress`; CLI in `cli.py` |
+| Code | `book_translate/`: `pages`, `layout`, `bilingual`, `inplace`, `check`, `reader`, `compress`; CLI in `cli.py` |
 | Example config | `conf/book.example.yaml` |
 | Books | `data/<book>/`, ignored by git. Book scans and texts are copyrighted and never go into the repository |
 | Contract | `SPEC.md`, items `BT-N`, each pinned by a test in `tests/` |

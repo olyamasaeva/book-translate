@@ -43,6 +43,11 @@ def main(argv: list[str] | None = None) -> None:
     p.add_argument("--out")
     p.add_argument("--force", action="store_true", help="перезаписать существующий PDF")
 
+    p = sub.add_parser("reader", help="HTML-читалка: оригинал и перевод рядом, пары подсвечиваются")
+    p.add_argument("--book", required=True)
+    p.add_argument("--out")
+    p.add_argument("--force", action="store_true", help="перезаписать существующий файл")
+
     p = sub.add_parser("check", help="проверка последней сборки inplace по итоговой вёрстке")
     p.add_argument("--book", required=True)
 
@@ -88,6 +93,10 @@ def dispatch(args: argparse.Namespace) -> None:
 
         inplace.configure(book)
         inplace.run(pids_arg(args.pages), args.out, force=args.force)
+    elif args.step == "reader":
+        from book_translate import reader
+
+        reader.run(book, args.out, force=args.force)
     elif args.step == "check":
         from book_translate import check, inplace
 

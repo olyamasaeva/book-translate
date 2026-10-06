@@ -35,6 +35,7 @@ CREDIT_WORDS = ()
 MASK_CELL = 4
 RETYPESET_RANGES = ()
 RETYPESET_KINDS = ("toc",)
+RETYPESET_VERSE_PARAGRAPHS = 0
 WORD_CONF = 50
 MATCH_CONTAINMENT = 0.6
 MATCH_MIN_GRAMS = 3
@@ -74,6 +75,7 @@ def configure(book):
         CREDIT_WORDS, \
         RETYPESET_RANGES, \
         RETYPESET_KINDS, \
+        RETYPESET_VERSE_PARAGRAPHS, \
         QUOTE_OPEN, \
         QUOTE_CLOSE
     global ATTRIBUTION_SOURCE, ATTRIBUTION_TARGET, UNIT_WORDS, NOTES_HEAD
@@ -95,6 +97,7 @@ def configure(book):
     SOURCE_NAMES = tuple(book.source_names.items())
     CREDIT_WORDS = book.credit_words
     RETYPESET_RANGES, RETYPESET_KINDS = book.retypeset_ranges, book.retypeset_kinds
+    RETYPESET_VERSE_PARAGRAPHS = book.retypeset_verse_paragraphs
     QUOTE_OPEN, QUOTE_CLOSE = book.quote_open, book.quote_close
     ATTRIBUTION_SOURCE, ATTRIBUTION_TARGET = book.attribution_source, book.attribution_target
     UNIT_WORDS = {w.lower() for w in book.service_words}
@@ -105,8 +108,23 @@ def configure(book):
     )
 
 
+def verse_paragraphs(text):
+    return sum(1 for block in re.split(r"\n\s*\n", (text or "").strip()) if "\n" in block.strip())
+
+
+def verse_heavy(t):
+    return (
+        bool(RETYPESET_VERSE_PARAGRAPHS)
+        and verse_paragraphs(t.get("source")) >= RETYPESET_VERSE_PARAGRAPHS
+    )
+
+
 def retypeset(pid, t):
-    return t.get("kind") in RETYPESET_KINDS or any(a <= pid <= b for a, b in RETYPESET_RANGES)
+    return (
+        t.get("kind") in RETYPESET_KINDS
+        or any(a <= pid <= b for a, b in RETYPESET_RANGES)
+        or verse_heavy(t)
+    )
 
 
 def retypeset_html(t):

@@ -8,7 +8,7 @@ from pathlib import Path
 import pytest
 from PIL import Image
 
-from book_translate import compress, inplace, page_json, pages, settings, tools
+from book_translate import compress, inplace, page_json, pages, reader, settings, tools
 
 EXAMPLE = Path(__file__).resolve().parent.parent / "conf" / "book.example.yaml"
 MINIMAL = (
@@ -88,6 +88,19 @@ def test_абзац_со_словом_в_кавычках_не_цитата(book
         "translation": "«Воскресное платье» хранили в сундуке.",
     }
     assert inplace.quotes(t) == []
+
+
+@pytest.mark.contract("BT-2.3")
+def test_страница_песен_набирается_заново(book):
+    """Given страница с тремя куплетами и порог 3, When решаем раскладку, Then страница набирается заново; при пороге 0 — нет."""
+    verse = "a\nb\n\nc\nd\n\nprose\n\ne\nf"
+    t = {"source": verse, "translation": verse, "kind": "text"}
+    inplace.RETYPESET_VERSE_PARAGRAPHS = 3
+    assert inplace.retypeset("p-005", t)
+    inplace.RETYPESET_VERSE_PARAGRAPHS = 4
+    assert not inplace.retypeset("p-005", t)
+    inplace.RETYPESET_VERSE_PARAGRAPHS = 0
+    assert not inplace.retypeset("p-005", t)
 
 
 @pytest.mark.contract("BT-3.1")
@@ -214,3 +227,66 @@ def test_нет_программы_понятная_ошибка():
     """Given программы нет в системе, When ищем, Then ToolError с её именем."""
     with pytest.raises(tools.ToolError, match="no-such-binary-xyz"):
         tools.find_executable("no-such-binary-xyz")
+
+
+@pytest.mark.contract("BT-10.1")
+def test_читалка_сопоставляет_строки_предложения_и_абзацы():
+    """Given стих, абзац с равным числом предложений и абзац с разным, When сопоставляем, Then строки, фразы, целый абзац."""
+    source = "Lenti kokko,\nkoilta ilmoin.\n\nHän tuli. Hän meni.\n\nSe oli hyvä. Ja kaunis."
+    translation = "Летел орёл,\nс востока.\n\nОн пришёл. Он ушёл.\n\nЭто было хорошо и красиво."
+    paras = reader.units(source, translation)
+    assert paras[0] == ([("Lenti kokko,", "Летел орёл,"), ("koilta ilmoin.", "с востока.")], True)
+    assert paras[1] == ([("Hän tuli.", "Он пришёл."), ("Hän meni.", "Он ушёл.")], False)
+    assert paras[2] == ([("Se oli hyvä. Ja kaunis.", "Это было хорошо и красиво.")], False)
+    assert reader.units("a\n\nb", "только один") == [([("a\n\nb", "только один")], False)]
+
+
+@pytest.mark.contract("BT-10.2")
+def test_читалка_выделяет_сомнительное_слово_с_подсказкой():
+    """Given сомнение «kešu repońi / x» и текст, When размечаем, Then первое вхождение в mark с догадкой."""
+    texts = ["reunašša kešu repońi, vierellä", "kešu repońi ещё раз"]
+    doubts = [{"word": "kešu repońi / zzz", "guess": "ручная лисонька"}]
+    tips = [reader.doubt_tip(doubts[0], {"вердикт": "верно"})]
+    spans = reader.doubt_spans(texts, doubts, tips)
+    assert spans[1] == []
+    html_text = reader.marked(texts[0], spans[0])
+    assert '<mark class="doubt"' in html_text and "kešu repońi</mark>" in html_text
+    assert "ручная лисонька" in html_text and "Astra: верно" in html_text
+
+
+def test_читалка_показывает_вердикт_словаря():
+    """Given сомнение, подтверждённое словарём, и сомнение с правкой, When размечаем, Then вердикт в подсказке, подтверждённое — бледным."""
+    texts = ["hasie kannata, kosinolla istu"]
+    doubts = [
+        {
+            "word": "hasie",
+            "guess": "спорить",
+            "checked": "нет — расходится",
+            "dictionary": "хвалить",
+            "fix": "хвастаться",
+        },
+        {"word": "kosinolla", "guess": "голбец", "checked": "да — совпадает"},
+    ]
+    tips = [reader.doubt_tip(d, None) for d in doubts]
+    html_text = reader.marked(texts[0], reader.doubt_spans(texts, doubts, tips)[0])
+    assert "словарь: нет — расходится — хвалить" in html_text and "правка: хвастаться" in html_text
+    assert '<mark class="doubt ok"' in html_text and '<mark class="doubt" ' in html_text
+
+
+def test_читалка_не_заменяет_файл_без_force(tmp_path):
+    """Given готовый файл читалки, When публикуем без force, Then отказ и файл цел; с force — заменён, временных нет."""
+    target = tmp_path / "r.html"
+    target.write_text("старое", encoding="utf-8")
+    with pytest.raises(FileExistsError):
+        reader.publish(target, "новое", force=False)
+    assert target.read_text(encoding="utf-8") == "старое"
+    reader.publish(target, "новое", force=True)
+    assert target.read_text(encoding="utf-8") == "новое"
+    assert sorted(p.name for p in tmp_path.iterdir()) == ["r.html"]
+
+
+def test_читалка_делит_длинное_сомнение_без_зависания():
+    """Given слово из тысяч пробелов без разделителей, When делим на части, Then одна часть и линейное время."""
+    word = "a" + " " * 50000 + "b"
+    assert reader.ALTERNATIVES.split(word) == [word]
+    assert reader.doubt_spans(["a b"], [{"word": word}], ["tip"]) == [[]]
