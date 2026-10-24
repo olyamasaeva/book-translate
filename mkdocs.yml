@@ -1,11 +1,15 @@
 site_name: book-translate
+site_description: Translate scanned books with Claude Code into an in-place PDF, a bilingual PDF and an offline reader, without covering photos or drawings
+site_url: https://olyamasaeva.github.io/book-translate/
+repo_url: https://github.com/olyamasaeva/book-translate
+repo_name: olyamasaeva/book-translate
 
 theme:
   name: material
   language: ru
 
 nav:
-  - Обзор: index.md
+  - Overview: index.md
   - Как переводить: guide.md
   - Инструкция переводчику: translation-instruction.md
   - API: api.md

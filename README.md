@@ -1,17 +1,45 @@
-# book-translate
+# book-translate: translate scanned books with Claude Code
 
-Translate a scanned book that has no text layer into two PDFs and an offline reader:
+![A page of a 1903 Finnish photo album: the scan, and the same page with the caption translated into English in place](docs/img/inplace-before-after.jpg)
 
-- **bilingual**: the page scan on the left, the translation on the right;
-- **in-place**: the original text on each page is replaced with the translation in the
-  same layout. Photos, drawings, sewing-pattern lines and other text stay uncovered;
+A [Claude Code](https://claude.com/claude-code) skill and a command-line tool for books
+that exist only as scans. Claude reads the page images and translates them. The tool lays
+the translation back onto the original pages, so photos, drawings and patterns stay
+uncovered, and builds three files:
+
+- **in-place PDF**: the original text on each page is replaced with the translation in the
+  same layout;
+- **bilingual PDF**: the page scan on the left, the translation on the right;
 - **reader**: one offline HTML file with the original and the translation side by side.
-  Hovering a line or sentence highlights its counterpart, and words the translator was
-  unsure about carry a tooltip with the guess and, once checked, the dictionary verdict.
+  Hovering a sentence highlights its counterpart, and words the translator was unsure
+  about carry a tooltip with the guess and, once checked, the dictionary verdict.
+
+![The reader: Finnish original on the left, English translation on the right, one sentence pair highlighted](docs/img/reader.png)
 
 The pipeline handles the hard parts of illustrated non-fiction scans: colour photos,
 patterns drawn on a grid, captions set at an angle, footnotes, and multi-stanza quotes
-and songs.
+and songs. It was built on a 222-page Finnish book about folk costume with sewing patterns
+and a chapter of Finnish and Karelian wedding songs, both translated into Russian.
+
+## Quick start with Claude Code
+
+```bash
+git clone https://github.com/olyamasaeva/book-translate ~/.claude/skills/book-translate
+cd ~/.claude/skills/book-translate && uv sync
+```
+
+Then ask Claude Code, for example:
+
+- "Translate book.pdf from German into English, keep the photos"
+- "Make a bilingual PDF of this scanned chapter"
+- "Переведи эту книгу с финского на русский прямо на странице"
+
+or call the skill directly: `/book-translate`. The workflow Claude follows is in
+[SKILL.md](SKILL.md).
+
+The example images show pages of *Suomi-albumi: kuvia tuhatjärvien maasta* (Hancock,
+Michigan, 1903), a public-domain album from the
+[Internet Archive](https://archive.org/details/suomialbumikuvia00unse).
 
 ## How it differs from existing PDF translators
 
@@ -50,7 +78,11 @@ book.pdf ──pages──► pages/p-NNN[a|b].jpg
                                                      check ◄──┘
 ```
 
-## Usage
+## Usage without Claude Code
+
+The CLI does not call any translation service. The page translations can come from Claude
+(see [SKILL.md](SKILL.md)), from another model or from a person; the tool only needs one
+JSON file per page.
 
 ```bash
 uv sync
@@ -173,8 +205,36 @@ The tests need neither a network nor Chrome nor a book.
 - A translation is often longer than the original. Boxes grow into white margins first,
   text is shrunk only when there is no free space left, and text that still does not fit
   is reported by `check`.
-- Translating the pages is a separate step: this repository does layout, rendering and
-  checking, not machine translation.
+- Text set with very wide letter or word spacing, found in some books printed before
+  1920, breaks block detection: lines are split into single words and only partly covered.
+  Typeset such pages from scratch with `retypeset_ranges`.
+- The CLI does not translate. Pages are translated by Claude through the skill, by another
+  model or by a person.
+
+## FAQ
+
+**How do I translate a scanned PDF that has no text layer?**
+Split it into page images with `book-translate pages`, translate each page from the image
+(Claude does this when you use the skill), then build the PDFs. OCR is used only to locate
+text on the page, so a poor scan does not spoil the translation.
+
+**Can I keep the original layout and photos?**
+Yes, this is what the in-place PDF is for. Translation boxes never cover photos or
+drawings; on sewing patterns and grids the boxes are transparent and the grid lines stay.
+If the translation is longer than the original, boxes grow into the white margins first.
+
+**Which languages are supported?**
+Any left-to-right source language that Tesseract can read for layout, into any
+left-to-right target language. Whole books so far: Finnish → Russian and Finnish with
+Karelian → Russian. The pictures above are a five-page Finnish → English demo.
+
+**Do I need an API key?**
+No. With Claude Code the translation happens in your Claude Code session. The CLI runs
+offline.
+
+**Can I publish the translation?**
+Only if you have the rights: the book is in the public domain, it is your own text, or the
+author agreed. Scans and translations are never committed to this repository.
 
 ## License
 
