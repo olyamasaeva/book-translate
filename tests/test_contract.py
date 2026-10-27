@@ -273,6 +273,23 @@ def test_читалка_показывает_вердикт_словаря():
     assert '<mark class="doubt ok"' in html_text and '<mark class="doubt" ' in html_text
 
 
+def test_читалка_показывает_справки_других_словарей():
+    """Given сомнение со справкой корпуса «да», When размечаем, Then справка в подсказке, слово бледным."""
+    texts = ["Liitelekši, loatelekši"]
+    doubts = [
+        {
+            "word": "loatelekši",
+            "guess": "кружил?",
+            "checked": "частично",
+            "lookups": [{"source": "SKVR", "verdict": "да", "note": "Liitelekse loatelekse"}],
+        }
+    ]
+    tips = [reader.doubt_tip(d, None) for d in doubts]
+    html_text = reader.marked(texts[0], reader.doubt_spans(texts, doubts, tips)[0])
+    assert "SKVR: да — Liitelekse loatelekse" in html_text
+    assert '<mark class="doubt ok"' in html_text
+
+
 def test_читалка_не_заменяет_файл_без_force(tmp_path):
     """Given готовый файл читалки, When публикуем без force, Then отказ и файл цел; с force — заменён, временных нет."""
     target = tmp_path / "r.html"

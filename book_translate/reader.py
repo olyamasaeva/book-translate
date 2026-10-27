@@ -87,11 +87,16 @@ def doubt_tip(d: dict, opinion: dict | None) -> str:
         )
     if d.get("fix"):
         tip += f"\nправка: {d['fix']}"
+    for lookup in d.get("lookups") or []:
+        tip += f"\n{lookup.get('source', '')}: {lookup.get('verdict', '')}" + (
+            f" — {lookup['note']}" if lookup.get("note") else ""
+        )
     return tip
 
 
 def doubt_class(d: dict) -> str:
-    return "doubt ok" if str(d.get("checked", "")).startswith(CONFIRMED) else "doubt"
+    verdicts = [d.get("checked", "")] + [x.get("verdict", "") for x in d.get("lookups") or []]
+    return "doubt ok" if any(str(v).startswith(CONFIRMED) for v in verdicts) else "doubt"
 
 
 def marked(text: str, spans: list[tuple[int, int, str, str]]) -> str:
