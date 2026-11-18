@@ -1,27 +1,31 @@
-# book-translate: translate scanned books with Claude Code
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="docs/img/banner-dark.png">
+    <img src="docs/img/banner-light.png" alt="book-translate: scanned books, translated right on the page" width="100%">
+  </picture>
+</p>
 
-![A page of a 1903 Finnish photo album: the scan, and the same page with the caption translated into English in place](docs/img/inplace-before-after.jpg)
+<p align="center">
+  <a href="https://github.com/olyamasaeva/book-translate/actions/workflows/tests.yml"><img src="https://img.shields.io/github/actions/workflow/status/olyamasaeva/book-translate/tests.yml?branch=main&style=flat-square&logo=github&logoColor=white&label=tests" alt="Tests"></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-e0679a?style=flat-square" alt="License: MIT"></a>
+  <img src="https://img.shields.io/badge/python-3.10%2B-e0679a?style=flat-square&logo=python&logoColor=white" alt="Python 3.10+">
+  <img src="https://img.shields.io/badge/Claude%20Code-skill-e0679a?style=flat-square&logo=claude&logoColor=white" alt="Claude Code skill">
+</p>
 
-A [Claude Code](https://claude.com/claude-code) skill and a command-line tool for books
-that exist only as scans. Claude reads the page images and translates them. The tool lays
-the translation back onto the original pages, so photos, drawings and patterns stay
-uncovered, and builds three files:
+<p align="center"><a href="SKILL.md"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/img/btn-skill-dark.png"><img src="docs/img/btn-skill-light.png" height="34" alt="SKILL.md" /></picture></a>&nbsp;<a href="#quick-start"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/img/btn-start-dark.png"><img src="docs/img/btn-start-light.png" height="34" alt="Quick start" /></picture></a>&nbsp;<a href="#manual"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/img/btn-manual-dark.png"><img src="docs/img/btn-manual-light.png" height="34" alt="The manual" /></picture></a></p>
 
-- **in-place PDF**: the original text on each page is replaced with the translation in the
-  same layout;
-- **bilingual PDF**: the page scan on the left, the translation on the right;
-- **reader**: one offline HTML file with the original and the translation side by side.
-  Hovering a sentence highlights its counterpart, and words the translator was unsure
-  about carry a tooltip with the guess and, once checked, the dictionary verdict.
+> [!NOTE]
+> **The text is read from the page image, and the translation goes back onto the page without covering a single photo.** Built on a 222-page Finnish book about folk costume with sewing patterns and a chapter of Finnish and Karelian wedding songs, both translated into Russian.
 
-![The reader: Finnish original on the left, English translation on the right, one sentence pair highlighted](docs/img/reader.png)
+<h3 align="center">The book exists only as scans. Read it in your language anyway.</h3>
 
-The pipeline handles the hard parts of illustrated non-fiction scans: colour photos,
-patterns drawn on a grid, captions set at an angle, footnotes, and multi-stanza quotes
-and songs. It was built on a 222-page Finnish book about folk costume with sewing patterns
-and a chapter of Finnish and Karelian wedding songs, both translated into Russian.
+<p align="center"><b>book-translate</b> is a Claude Code skill and a command-line tool for books that exist only as scans.<br>Claude reads the page images and translates them; the tool lays the translation back onto the original pages.</p>
 
-## Quick start with Claude Code
+<p align="center"><a href="#quick-start">Quick start</a> · <a href="#why">Why</a> · <a href="#what-you-get">What you get</a> · <a href="#not-yet">What it doesn't do yet</a> · <a href="#faq">Questions</a> · <a href="#manual">The manual</a></p>
+
+<a id="quick-start"></a>
+
+## 🚀 Running in two minutes
 
 ```bash
 git clone https://github.com/olyamasaeva/book-translate ~/.claude/skills/book-translate
@@ -35,13 +39,11 @@ Then ask Claude Code, for example:
 - "Переведи эту книгу с финского на русский прямо на странице"
 
 or call the skill directly: `/book-translate`. The workflow Claude follows is in
-[SKILL.md](SKILL.md).
+[SKILL.md](SKILL.md). System dependencies are listed under [Usage without Claude Code](#cli).
 
-The example images show pages of *Suomi-albumi: kuvia tuhatjärvien maasta* (Hancock,
-Michigan, 1903), a public-domain album from the
-[Internet Archive](https://archive.org/details/suomialbumikuvia00unse).
+<a id="why"></a>
 
-## How it differs from existing PDF translators
+## 💡 How it differs from existing PDF translators
 
 Tools such as PDFMathTranslate and BabelDOC work best on PDFs that already have a text
 layer, and they place the translation on a white background. This project targets a
@@ -61,7 +63,85 @@ different case:
   and confidently recognised words of the original that are still visible. The visible-word
   count comes from the OCR of the scan, so it works the same for any source language.
 
-## Pipeline
+<a id="what-you-get"></a>
+
+## 📚 A scan in, three files out
+
+<picture><source media="(prefers-color-scheme: dark)" srcset="docs/img/shot-hero-dark.png"><img src="docs/img/shot-hero-light.png" width="100%" alt="A page of a 1903 Finnish photo album: the scan, and the same page with the caption translated into English in place" /></picture>
+
+| | |
+|---|---|
+| 📄 **In-place PDF** | The original text on each page is replaced with the translation in the same layout. |
+| 📖 **Bilingual PDF** | The page scan on the left, the translation on the right. |
+| 🔦 **Reader** | One offline HTML file, original and translation side by side; hovering a sentence highlights its counterpart. |
+| ❓ **Doubts** | Words the translator was unsure about carry a tooltip with the guess and, once checked, the dictionary verdict. |
+| ✅ **Check** | Counts boxes on photos, overlaps, shrunk or overflowing text and original words still visible. |
+| 🗜️ **Compress** | Downsamples scans to 150 dpi for sending. |
+
+<details>
+<summary><b>See the reader and the bilingual PDF</b></summary>
+
+<table>
+<tr>
+<td width="50%" valign="top"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/img/shot-reader-dark.png"><img src="docs/img/shot-reader-light.png" width="100%" alt="The reader: Finnish original on the left, English translation on the right, one sentence pair highlighted" /></picture><br><b>Reader</b> · <sub>Hover a sentence and its pair lights up.</sub></td>
+<td width="50%" valign="top"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/img/shot-bilingual-dark.png"><img src="docs/img/shot-bilingual-light.png" width="100%" alt="A page of the bilingual PDF: the scan on the left, the English translation on the right" /></picture><br><b>Bilingual PDF</b> · <sub>Scan left, translation right.</sub></td>
+</tr>
+</table>
+
+</details>
+
+<sub>The pictures show a five-page Finnish → English demo built with this tool from <i>Suomi-albumi: kuvia tuhatjärvien maasta</i> (Hancock, Michigan, 1903), a public-domain album from the <a href="https://archive.org/details/suomialbumikuvia00unse">Internet Archive</a>. The reader's legend is in Russian in this build.</sub>
+
+<a id="not-yet"></a>
+
+## 🧭 What it doesn't do yet
+
+- **Right-to-left and vertical scripts** are not supported. Spreads and columns are always
+  ordered left to right, and documents have no `dir` setting.
+- **Scripts without spaces** between words (Chinese, Japanese, Thai) cannot be shortened
+  word by word: the fitting script splits text on spaces.
+- **Caches don't know their inputs.** The OCR and layout caches do not record which scan,
+  language or settings they were made with. Delete `layout/` after replacing scans or
+  changing `ocr_lang`.
+- **One book per process.** Module state is set per book with `configure()`.
+- **Wide letter spacing** in some books printed before 1920 breaks block detection: lines
+  are split into single words and only partly covered. Typeset such pages from scratch
+  with `retypeset_ranges`.
+- **The CLI does not translate.** Pages are translated by Claude through the skill, by
+  another model or by a person.
+
+<a id="faq"></a>
+
+## ❓ Questions people ask first
+
+**How do I translate a scanned PDF that has no text layer?**
+Split it into page images with `book-translate pages`, translate each page from the image
+(Claude does this when you use the skill), then build the PDFs. OCR is used only to locate
+text on the page, so a poor scan does not spoil the translation.
+
+**Can I keep the original layout and photos?**
+Yes, this is what the in-place PDF is for. Translation boxes never cover photos or
+drawings; on sewing patterns and grids the boxes are transparent and the grid lines stay.
+If the translation is longer than the original, boxes grow into the white margins first.
+
+**Which languages are supported?**
+Any left-to-right source language that Tesseract can read for layout, into any
+left-to-right target language. Whole books so far: Finnish → Russian and Finnish with
+Karelian → Russian. The pictures above are a five-page Finnish → English demo.
+
+**Do I need an API key?**
+No. With Claude Code the translation happens in your Claude Code session. The CLI runs
+offline.
+
+**Can I publish the translation?**
+Only if you have the rights: the book is in the public domain, it is your own text, or the
+author agreed. Scans and translations are never committed to this repository.
+
+<a id="manual"></a>
+
+## 📖 The manual
+
+### Pipeline
 
 ```
 book.pdf ──pages──► pages/p-NNN[a|b].jpg
@@ -78,7 +158,9 @@ book.pdf ──pages──► pages/p-NNN[a|b].jpg
                                                      check ◄──┘
 ```
 
-## Usage without Claude Code
+<a id="cli"></a>
+
+### Usage without Claude Code
 
 The CLI does not call any translation service. The page translations can come from Claude
 (see [SKILL.md](SKILL.md)), from another model or from a person; the tool only needs one
@@ -109,7 +191,7 @@ usual names and install paths on Linux, macOS and Windows. Tesseract is taken fr
 `PATH` unless the config points elsewhere. If a program is missing or fails, the command
 stops with its name and error output instead of producing an empty result.
 
-## Book config
+### Book config
 
 Everything specific to a book lives in `book.yaml`. Relative paths are resolved from the
 file's own directory. The book's language has to be set explicitly, and the config will
@@ -137,7 +219,7 @@ not load without it:
 
 See `conf/book.example.yaml`.
 
-## Page translation format
+### Page translation format
 
 One JSON file per page:
 
@@ -155,7 +237,13 @@ The field names are the same for any language pair. Files that use the older key
 `fi`/`ru` are read too. The full rules for translators (columns, headings, quotes,
 footnotes, labels on patterns) are in `docs/translation-instruction.md`.
 
-## Security
+### Fitting a longer translation
+
+A translation is often longer than the original. Boxes grow into white margins first,
+text is shrunk only when there is no free space left, and text that still does not fit
+is reported by `check`.
+
+### Security
 
 Translations and OCR output are treated as untrusted text:
 
@@ -173,7 +261,7 @@ The book config is trusted, like a script. It names the programs that get execut
 (`chrome`, `tesseract`) and where PDFs are written, and its `title` is HTML. Read a
 config from someone else before running it.
 
-## Repository layout
+### Repository layout
 
 | What | Where |
 |---|---|
@@ -181,9 +269,9 @@ config from someone else before running it.
 | Example config | `conf/book.example.yaml` |
 | Books | `data/<book>/`, ignored by git. Book scans and texts are copyrighted and never go into the repository |
 | Contract | `SPEC.md`, items `BT-N`, each pinned by a test in `tests/` |
-| Docs | `docs/`, built with `mkdocs` (`uv run --extra docs mkdocs serve`) |
+| Docs | `docs/`, built with `mkdocs` (`uv run --extra docs mkdocs serve`); the guide and the translator instructions are in Russian |
 
-## Development
+### Development
 
 ```bash
 uv sync
@@ -191,51 +279,8 @@ uv run pre-commit install
 uv run pytest
 ```
 
-The tests need neither a network nor Chrome nor a book.
+The tests need neither a network nor Chrome nor a book. CI runs them on every push.
 
-## Limitations
-
-- Right-to-left and vertical scripts are not supported. Spreads and columns are always
-  ordered left to right, and documents have no `dir` setting.
-- The fitting script splits text on spaces, so scripts written without spaces between
-  words (Chinese, Japanese, Thai) cannot be shortened word by word.
-- The OCR and layout caches do not record which scan, language or settings they were
-  made with. Delete `layout/` after replacing scans or changing `ocr_lang`.
-- Module state is set per book with `configure()`. Process one book per Python process.
-- A translation is often longer than the original. Boxes grow into white margins first,
-  text is shrunk only when there is no free space left, and text that still does not fit
-  is reported by `check`.
-- Text set with very wide letter or word spacing, found in some books printed before
-  1920, breaks block detection: lines are split into single words and only partly covered.
-  Typeset such pages from scratch with `retypeset_ranges`.
-- The CLI does not translate. Pages are translated by Claude through the skill, by another
-  model or by a person.
-
-## FAQ
-
-**How do I translate a scanned PDF that has no text layer?**
-Split it into page images with `book-translate pages`, translate each page from the image
-(Claude does this when you use the skill), then build the PDFs. OCR is used only to locate
-text on the page, so a poor scan does not spoil the translation.
-
-**Can I keep the original layout and photos?**
-Yes, this is what the in-place PDF is for. Translation boxes never cover photos or
-drawings; on sewing patterns and grids the boxes are transparent and the grid lines stay.
-If the translation is longer than the original, boxes grow into the white margins first.
-
-**Which languages are supported?**
-Any left-to-right source language that Tesseract can read for layout, into any
-left-to-right target language. Whole books so far: Finnish → Russian and Finnish with
-Karelian → Russian. The pictures above are a five-page Finnish → English demo.
-
-**Do I need an API key?**
-No. With Claude Code the translation happens in your Claude Code session. The CLI runs
-offline.
-
-**Can I publish the translation?**
-Only if you have the rights: the book is in the public domain, it is your own text, or the
-author agreed. Scans and translations are never committed to this repository.
-
-## License
+### License
 
 MIT — see [LICENSE](LICENSE).
