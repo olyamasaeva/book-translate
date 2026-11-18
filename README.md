@@ -1,5 +1,7 @@
 # book-translate: translate scanned books with Claude Code
 
+*Русская версия: [README.ru.md](README.ru.md).*
+
 ![A page of a 1903 Finnish photo album: the scan, and the same page with the caption translated into English in place](docs/img/inplace-before-after.jpg)
 
 A [Claude Code](https://claude.com/claude-code) skill and a command-line tool for books
