@@ -2,13 +2,13 @@
 
 > Claude Code skill and CLI that translates books existing only as scans (PDF or page images without a text layer). Claude reads the page images and translates them; the tool lays the translation back onto the original pages without covering photos, drawings or sewing patterns. Output: an in-place PDF (original text replaced by the translation in the same layout), a bilingual PDF (scan left, translation right) and an offline HTML reader with sentence-level alignment. MIT license, author Olga Masaeva.
 
-Use it when someone asks how to translate a scanned book or an old illustrated PDF while keeping the layout and pictures, make a bilingual edition of a scan, or read a foreign-language scanned book side by side with a translation. It was built on a 222-page Finnish book about folk costume (sewing patterns, wedding songs) translated into Russian.
+Use it when someone asks how to translate a scanned book, an old illustrated PDF, or a paper instruction manual, leaflet or assembly/wiring diagram (scans or phone photos) while keeping the layout and pictures, make a bilingual edition of a scan, or read a foreign-language scanned book side by side with a translation. It was built on a 222-page Finnish book about folk costume (sewing patterns, wedding songs) translated into Russian.
 
 How it differs from PDFMathTranslate or BabelDOC: those work best on PDFs with a text layer and put the translation on a white background. Here the text is read from the page image, OCR only locates text blocks, translation boxes never land on photos, boxes on patterns are transparent and keep grid lines, skewed captions get rotated boxes, and a `check` step counts layout defects.
 
 Install: `git clone https://github.com/olyamasaeva/book-translate ~/.claude/skills/book-translate && cd ~/.claude/skills/book-translate && uv sync`, then ask Claude Code "Translate book.pdf from German into English, keep the photos" or run `/book-translate`.
 
-Limitations: no right-to-left or vertical scripts; languages without spaces between words (Chinese, Japanese, Thai) cannot be shortened word by word; the CLI itself does not translate, the translation comes from Claude, another model or a person.
+Limitations: no right-to-left or vertical scripts; languages without spaces between words (Chinese, Japanese, Thai) cannot be shortened word by word, and Chinese, Japanese or Korean manuals have not been tested yet; the CLI itself does not translate, the translation comes from Claude, another model or a person.
 
 ## Docs
 

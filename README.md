@@ -19,9 +19,9 @@
 > [!NOTE]
 > **The text is read from the page image, and the translation goes back onto the page without covering a single photo.** Built on a 222-page Finnish book about folk costume with sewing patterns and a chapter of Finnish and Karelian wedding songs, both translated into Russian.
 
-<h3 align="center">The book exists only as scans. Read it in your language anyway.</h3>
+<h3 align="center">The book or the manual exists only on paper. Read it in your language anyway.</h3>
 
-<p align="center"><b>book-translate</b> is a Claude Code skill and a command-line tool for books that exist only as scans.<br>Claude reads the page images and translates them; the tool lays the translation back onto the original pages.</p>
+<p align="center"><b>book-translate</b> is a Claude Code skill and a command-line tool for printed pages that exist only as scans or phone photos:<br>books, instruction manuals, leaflets that came with a device, wiring and assembly diagrams.<br>Claude reads the page images and translates them; the tool lays the translation back onto the original pages.</p>
 
 <p align="center"><a href="#quick-start">Quick start</a> · <a href="#why">Why</a> · <a href="#what-you-get">What you get</a> · <a href="#not-yet">What it doesn't do yet</a> · <a href="#faq">Questions</a> · <a href="#manual">The manual</a></p>
 
@@ -38,6 +38,7 @@ Then ask Claude Code, for example:
 
 - "Translate book.pdf from German into English, keep the photos"
 - "Make a bilingual PDF of this scanned chapter"
+- "Here are phone photos of the manual for my German coffee machine, translate it into English right on the pages"
 - "Переведи эту книгу с финского на русский прямо на странице"
 
 or call the skill directly: `/book-translate`. The workflow Claude follows is in
@@ -101,7 +102,8 @@ different case:
 - **Right-to-left and vertical scripts** are not supported. Spreads and columns are always
   ordered left to right, and documents have no `dir` setting.
 - **Scripts without spaces** between words (Chinese, Japanese, Thai) cannot be shortened
-  word by word: the fitting script splits text on spaces.
+  word by word: the fitting script splits text on spaces. Manuals in Chinese, Japanese or
+  Korean have not been tested yet; if you try one, please open an issue with the result.
 - **Caches don't know their inputs.** The OCR and layout caches do not record which scan,
   language or settings they were made with. Delete `layout/` after replacing scans or
   changing `ocr_lang`.
