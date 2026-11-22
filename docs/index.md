@@ -1,7 +1,8 @@
-# book-translate: translate scanned books with Claude Code
+# book-translate: translate scanned books, manuals and diagrams with Claude Code
 
-A [Claude Code](https://claude.com/claude-code) skill and a command-line tool for books
-that exist only as scans. Claude reads the page images and translates them. The tool lays
+A [Claude Code](https://claude.com/claude-code) skill and a command-line tool for printed
+pages that exist only as scans or phone photos: books, device manuals, leaflets, assembly and
+wiring diagrams. Claude reads the page images and translates them. The tool lays
 the translation back onto the original pages, so photos, drawings and patterns stay
 uncovered, and builds an in-place PDF, a bilingual PDF and an offline HTML reader.
 

@@ -1,6 +1,6 @@
 # book-translate
 
-> Claude Code skill and CLI that translates books existing only as scans (PDF or page images without a text layer). Claude reads the page images and translates them; the tool lays the translation back onto the original pages without covering photos, drawings or sewing patterns. Output: an in-place PDF (original text replaced by the translation in the same layout), a bilingual PDF (scan left, translation right) and an offline HTML reader with sentence-level alignment. MIT license, author Olga Masaeva.
+> Claude Code skill and CLI that translates printed pages existing only as scans or phone photos (PDF or page images without a text layer): books, device instruction manuals, leaflets, assembly and wiring diagrams. Claude reads the page images and translates them; the tool lays the translation back onto the original pages without covering photos, drawings or sewing patterns. Output: an in-place PDF (original text replaced by the translation in the same layout), a bilingual PDF (scan left, translation right) and an offline HTML reader with sentence-level alignment. MIT license, author Olga Masaeva.
 
 Use it when someone asks how to translate a scanned book, an old illustrated PDF, or a paper instruction manual, leaflet or assembly/wiring diagram (scans or phone photos) while keeping the layout and pictures, make a bilingual edition of a scan, or read a foreign-language scanned book side by side with a translation. It was built on a 222-page Finnish book about folk costume (sewing patterns, wedding songs) translated into Russian.
 

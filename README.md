@@ -3,7 +3,7 @@
 <p align="center">
   <picture>
     <source media="(prefers-color-scheme: dark)" srcset="docs/img/banner-dark.png">
-    <img src="docs/img/banner-light.png" alt="book-translate: scanned books, translated right on the page" width="100%">
+    <img src="docs/img/banner-light.png" alt="book-translate: books and manuals, translated right on the page" width="100%">
   </picture>
 </p>
 
@@ -17,7 +17,7 @@
 <p align="center"><a href="SKILL.md"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/img/btn-skill-dark.png"><img src="docs/img/btn-skill-light.png" height="34" alt="SKILL.md" /></picture></a>&nbsp;<a href="#quick-start"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/img/btn-start-dark.png"><img src="docs/img/btn-start-light.png" height="34" alt="Quick start" /></picture></a>&nbsp;<a href="#manual"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/img/btn-manual-dark.png"><img src="docs/img/btn-manual-light.png" height="34" alt="The manual" /></picture></a></p>
 
 > [!NOTE]
-> **The text is read from the page image, and the translation goes back onto the page without covering a single photo.** Built on a 222-page Finnish book about folk costume with sewing patterns and a chapter of Finnish and Karelian wedding songs, both translated into Russian.
+> **The text is read from the page image, and the translation goes back onto the page without covering a single photo.** Works on any printed page you can scan or photograph: a book, the manual that came with a device, a leaflet from the box, an assembly or wiring diagram. Built on a 222-page Finnish book about folk costume with sewing patterns and a chapter of Finnish and Karelian wedding songs, both translated into Russian.
 
 <h3 align="center">The book or the manual exists only on paper. Read it in your language anyway.</h3>
 
@@ -68,7 +68,7 @@ different case:
 
 <a id="what-you-get"></a>
 
-## 📚 A scan in, three files out
+## 📚 Scans or photos in, three files out
 
 <picture><source media="(prefers-color-scheme: dark)" srcset="docs/img/shot-hero-dark.png"><img src="docs/img/shot-hero-light.png" width="100%" alt="A page of a 1903 Finnish photo album: the scan, and the same page with the caption translated into English in place" /></picture>
 
@@ -128,6 +128,12 @@ Yes, this is what the in-place PDF is for. Translation boxes never cover photos 
 drawings; on sewing patterns and grids the boxes are transparent and the grid lines stay.
 If the translation is longer than the original, boxes grow into the white margins first.
 
+**Does it work for a device manual or a diagram, not a book?**
+Yes, the pipeline does not care what the pages are. Take phone photos of the pages, set
+`spreads: never` and ask Claude to translate them. Labels and callouts on a diagram are
+translated in place like photo captions, and the drawing stays visible. Dense schematics
+with dozens of tiny labels have not been tested yet.
+
 **Which languages are supported?**
 Any left-to-right source language that Tesseract can read for layout, into any
 left-to-right target language. Whole books so far: Finnish → Russian and Finnish with
@@ -138,7 +144,7 @@ No. With Claude Code the translation happens in your Claude Code session. The CL
 offline.
 
 **Can I publish the translation?**
-Only if you have the rights: the book is in the public domain, it is your own text, or the
+Translating a manual for your own use is fine. Publishing needs the rights: the book is in the public domain, it is your own text, or the
 author agreed. Scans and translations are never committed to this repository.
 
 <a id="manual"></a>
